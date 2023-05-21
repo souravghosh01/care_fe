@@ -28,6 +28,8 @@ interface Props {
   placeholder?: string;
   isOpen?: boolean;
   setIsOpen?: (isOpen: boolean) => void;
+  onClick?: () => void;
+  onClose?: () => void;
 }
 
 const DAYS = ["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"];
@@ -44,6 +46,7 @@ const DateInputV2: React.FC<Props> = ({
   placeholder,
   isOpen,
   setIsOpen,
+  onClick,
 }) => {
   const [dayCount, setDayCount] = useState<Array<number>>([]);
   const [blankDays, setBlankDays] = useState<Array<number>>([]);
@@ -91,7 +94,7 @@ const DateInputV2: React.FC<Props> = ({
   };
 
   const setDateValue = (date: number) => () => {
-    isDateWithinConstraints(date) &&
+    if (isDateWithinConstraints(date)) {
       onChange(
         new Date(
           datePickerHeaderDate.getFullYear(),
@@ -99,6 +102,8 @@ const DateInputV2: React.FC<Props> = ({
           date
         )
       );
+      setIsOpen && setIsOpen(false);
+    }
   };
 
   const getDayCount = (date: Date) => {
@@ -205,6 +210,7 @@ const DateInputV2: React.FC<Props> = ({
                 className="w-full"
                 onClick={() => {
                   setIsOpen && setIsOpen(!isOpen);
+                  onClick && onClick();
                 }}
               >
                 <input type="hidden" name="date" />
